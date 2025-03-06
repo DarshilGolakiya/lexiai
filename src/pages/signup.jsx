@@ -3,19 +3,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 
 const Signup = () => {
   const navigate = useNavigate();
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
-  console.log(API_BASE_URL);
 
   const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
   });
 
   const [errorMessage, setErrorMessage] = useState("");
   const [errors, setErrors] = useState({
+    firstname: "",
+    lastname: "",
     email: "",
     password: "",
   });
@@ -28,8 +32,23 @@ const Signup = () => {
   };
 
   const validateInputs = () => {
-    const newErrors = { email: "", password: "" };
+    const newErrors = {
+      firstname: "",
+      lastname: "",
+      email: "",
+      password: "",
+    };
     let isValid = true;
+
+    if (!formData.firstname.trim()) {
+      newErrors.firstname = "First name is required";
+      isValid = false;
+    }
+
+    if (!formData.lastname.trim()) {
+      newErrors.lastname = "Last name is required";
+      isValid = false;
+    }
 
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
@@ -63,14 +82,19 @@ const Signup = () => {
       return;
     }
     try {
-      const response = await axios.post(`${API_BASE_URL}/signup`, formData);
-      console.log("SignUp Success:", response.data);
+      const res = await axios.post(`${API_BASE_URL}/signup`, formData);
+      console.log("SignUp Success:", res.data);
+      Cookies.set("token", res.data.token);
+      console.log(res.data.token);
+      setErrorMessage("");
       navigate("/home");
     } catch (error) {
       console.error("Error Details:", error);
       if (error.response && error.response.data) {
         const errorData = error.response.data;
         setErrors({
+          firstname: errorData.firstname ? errorData.firstname.join(" ") : "",
+          lastname: errorData.lastname ? errorData.lastname.join(" ") : "",
           email: errorData.email ? errorData.email.join(" ") : "",
           password: errorData.password ? errorData.password.join(" ") : "",
         });
@@ -108,6 +132,42 @@ const Signup = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700">
+              First Name
+            </label>
+            <input
+              type="text"
+              name="firstname"
+              value={formData.firstname}
+              onChange={handleChange}
+              autoComplete="given-name"
+              className={`mt-1 block w-full rounded-md border px-3 py-2 ${
+                errors.firstname ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.firstname && (
+              <p className="text-red-500 text-xs mt-1">{errors.firstname}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Last Name
+            </label>
+            <input
+              type="text"
+              name="lastname"
+              value={formData.lastname}
+              onChange={handleChange}
+              autoComplete="family-name"
+              className={`mt-1 block w-full rounded-md border px-3 py-2 ${
+                errors.lastname ? "border-red-500" : "border-gray-300"
+              }`}
+            />
+            {errors.lastname && (
+              <p className="text-red-500 text-xs mt-1">{errors.lastname}</p>
+            )}
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -115,6 +175,7 @@ const Signup = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
+              autoComplete="email"
               className={`mt-1 block w-full rounded-md border px-3 py-2 ${
                 errors.email ? "border-red-500" : "border-gray-300"
               }`}
@@ -132,6 +193,7 @@ const Signup = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
+              autoComplete="new-password"
               className={`mt-1 block w-full rounded-md border px-3 py-2 ${
                 errors.password ? "border-red-500" : "border-gray-300"
               }`}

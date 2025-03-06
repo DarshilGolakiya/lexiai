@@ -104,9 +104,9 @@ const Home = () => {
         </select>
       </div>
       {/* Topic Table */}
-      <div className="mt-10 w-full max-w-4xl">
+      <div className="mt-10 w-full max-w-full overflow-x-auto">
         <h2 className="text-2xl font-semibold mb-4">Your Topics</h2>
-        <table className="w-full bg-gray-800 rounded-lg overflow-hidden">
+        <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
           <thead>
             <tr className="bg-gray-700 text-white">
               <th className="p-3">Topic</th>
@@ -120,7 +120,7 @@ const Home = () => {
               filteredTopics.map((topic, index) => (
                 <tr
                   key={index}
-                  className="border-b border-gray-700 text-center"
+                  className="border-b border-gray-700 text-left"
                 >
                   <td className="p-3">{topic.name}</td>
                   <td className="p-3">{topic.description}</td>

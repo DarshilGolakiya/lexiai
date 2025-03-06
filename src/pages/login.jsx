@@ -49,7 +49,7 @@ const Login = () => {
     try {
       const res = await axios.post(`${API_BASE_URL}/login`, formData);
       console.log("Login Success:", res.data);
-      Cookies.set("authToken", res.data.token);
+      Cookies.set("token", res.data.token);
       console.log(res.data.token);
       setErrorMessage("");
       navigate("/home");
@@ -64,6 +64,7 @@ const Login = () => {
       const res = await axios.get(`${API_BASE_URL}/auth/google`);
       if (res.status === 200 && res.data.auth_url) {
         window.open(res.data.auth_url, "_blank");
+        navigate("/home");
       }
     } catch (error) {
       console.error("Google Login Error:", error);
@@ -121,7 +122,7 @@ const Login = () => {
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
           </div>
-           <p className="text-sm text-gray-600 mt-2">
+          <p className="text-sm text-gray-600 mt-2">
             <a
               href="/forgate-password"
               className="font-medium text-blue-600 hover:text-blue-500"
@@ -155,7 +156,6 @@ const Login = () => {
               Create one here
             </a>
           </p>
-         
         </div>
       </div>
     </div>

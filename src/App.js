@@ -7,6 +7,7 @@ import Login from "./pages/login";
 import Sidebar from "./pages/Sidebar";
 import Topic from "./pages/Topic";
 import Forgate from "./password/Forgate";
+import ResetPassword from "./components/passwords/password";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/topic" element={<Topic />} />
           <Route path="/forgate-password" element={<Forgate />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </div>
     </Router>
