@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { FcGoogle } from "react-icons/fc";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
@@ -61,16 +62,27 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/auth/google`);
+      const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+        params: {
+          redirect_uri: "http://localhost:3000/auth-callback",
+        },
+      });
       if (res.status === 200 && res.data.auth_url) {
-        window.open(res.data.auth_url, "_blank");
-        navigate("/home");
+        window.location.href = res.data.auth_url;
       }
     } catch (error) {
       console.error("Google Login Error:", error);
       setErrorMessage("Failed to authenticate with Google.");
     }
   };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get("error");
+    if (error === "auth_failed") {
+      setErrorMessage("Authentication failed. Please try again.");
+    }
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -139,11 +151,18 @@ const Login = () => {
           </button>
         </form>
 
+        <div className="flex items-center justify-center mt-4">
+          <hr className="w-full border-gray-300" />
+          <span className="px-2 text-gray-500">or</span>
+          <hr className="w-full border-gray-300" />
+        </div>
+
         <button
           onClick={handleGoogleLogin}
-          className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-red-400"
+          className="w-full py-2 px-4 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 flex items-center justify-center space-x-2 mt-4"
         >
-          Login with Google
+          <FcGoogle className="text-2xl" />
+          <span>Continue with Google</span>
         </button>
 
         <div className="text-center mt-4">

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
+import { FcGoogle } from "react-icons/fc";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -105,21 +104,20 @@ const Signup = () => {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleLogin = async () => {
     try {
-      const token = credentialResponse.credential;
-      const decoded = jwtDecode(token);
-      console.log("Decoded User Info:", decoded);
-      await axios.post(`${API_BASE_URL}/auth/google/callback`, { token });
-      navigate("/");
+      const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+        params: {
+          redirect_uri: "http://localhost:3000/auth-callback", // Ensure this matches the URI in Google Cloud Console
+        },
+      });
+      if (res.status === 200 && res.data.auth_url) {
+        window.location.href = res.data.auth_url;
+      }
     } catch (error) {
-      console.error("Google Signup Error:", error);
-      setErrorMessage("Google signup failed. Please try again.");
+      console.error("Google Login Error:", error);
+      setErrorMessage("Failed to authenticate with Google.");
     }
-  };
-
-  const handleGoogleFailure = () => {
-    setErrorMessage("Google signup failed. Try again.");
   };
 
   return (
@@ -209,12 +207,21 @@ const Signup = () => {
             Sign Up
           </button>
         </form>
-        <div className="flex justify-center mt-4">
-          <GoogleLogin
-            onSuccess={handleGoogleSuccess}
-            onError={handleGoogleFailure}
-          />
+
+        <div className="flex items-center justify-center mt-4">
+          <hr className="w-full border-gray-300" />
+          <span className="px-2 text-gray-500">or</span>
+          <hr className="w-full border-gray-300" />
         </div>
+
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full py-2 px-4 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-gray-300 flex items-center justify-center space-x-2 mt-4"
+        >
+          <FcGoogle className="text-2xl" />
+          <span>Continue with Google</span>
+        </button>
+
         <div className="text-center mt-4">
           <a href="/" className="text-sm text-blue-600 hover:text-blue-800">
             Already have an account? Log in

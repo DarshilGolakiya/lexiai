@@ -3,9 +3,9 @@ import Cookies from "js-cookie";
 
 const Home = () => {
   const [stats, setStats] = useState({
-    totalSessions: 0,
-    averageScore: 0,
-    highestScore: 0,
+    total_session: "",
+    avg_score: "",
+    high_score: "",
   });
 
   const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
@@ -78,9 +78,9 @@ const Home = () => {
     <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-600 text-white p-6">
       <h1 className="text-4xl font-bold mb-6">Welcome to Lexi AI</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-4xl">
-        <StatCard title="Your Total Sessions" value={stats.totalSessions} />
-        <StatCard title="Your Average Score" value={stats.averageScore} />
-        <StatCard title="Your Highest Score" value={stats.highestScore} />
+        <StatCard title="Your Total Sessions" value={stats.total_session} />
+        <StatCard title="Your Average Score" value={stats.avg_score} />
+        <StatCard title="Your Highest Score" value={stats.high_score} />
       </div>
       {/* Search and Filter Section */}
       <div className="mt-6 flex flex-col md:flex-row gap-4 items-center w-full max-w-4xl">
@@ -108,7 +108,7 @@ const Home = () => {
         <h2 className="text-2xl font-semibold mb-4">Your Topics</h2>
         <table className="min-w-full bg-gray-800 rounded-lg overflow-hidden">
           <thead>
-            <tr className="bg-gray-700 text-white">
+            <tr className="bg-gray-700 text-white text-left">
               <th className="p-3">Topic</th>
               <th className="p-3">Description</th>
               <th className="p-3">Your Score</th>
@@ -118,14 +118,11 @@ const Home = () => {
           <tbody>
             {filteredTopics.length > 0 ? (
               filteredTopics.map((topic, index) => (
-                <tr
-                  key={index}
-                  className="border-b border-gray-700 text-left"
-                >
+                <tr key={index} className="border-b border-gray-700 text-left">
                   <td className="p-3">{topic.name}</td>
                   <td className="p-3">{topic.description}</td>
-                  <td className="p-3">{topic.yourScore}</td>
-                  <td className="p-3">{topic.highScore}</td>
+                  <td className="p-3">{topic.your_score}</td>
+                  <td className="p-3">{topic.high_score}</td>
                 </tr>
               ))
             ) : (

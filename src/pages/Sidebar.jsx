@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaBars,
@@ -10,10 +10,21 @@ import {
   FaSignOutAlt,
 } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showLogout, setShowLogout] = useState(false);
+  const [email, setEmail] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = Cookies.get("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      setEmail(decoded.email);
+    }
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -28,14 +39,15 @@ const Sidebar = () => {
           isOpen ? "translate-x-0" : "-translate-x-64"
         } md:translate-x-0 flex flex-col justify-between`}
       >
-        <div> <Link
-              to="/"
-              className="text-3xl font-bold"
-            >
-              
-              <h1>𝕃𝕖𝕩𝕚 ᗩI</h1>
-            </Link>
-          
+        <div>
+          <Link
+            to="/"
+            className="text-4xl font-bold"
+            style={{ fontFamily: "Poppins, sans-serif" }}
+          >
+            <h1>LexiAI</h1>
+          </Link>
+          <div><hr className="w-full border-gray-300" /></div>
           <nav className="flex flex-col space-y-4 mt-6">
             <Link
               to="/home"
@@ -68,14 +80,24 @@ const Sidebar = () => {
           </nav>
         </div>
 
-        {/* Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="flex items-center space-x-2 p-3 bg-red-600 hover:bg-red-700 text-xl rounded w-full text-left"
-        >
-          <FaSignOutAlt />
-          <span>Logout</span>
-        </button>
+        {/* User Email and Logout Button */}
+        <div className="flex flex-col items-start">
+          <button
+            onClick={() => setShowLogout(!showLogout)}
+            className="flex items-center space-x-2 p-3 hover:bg-gray-700 text-xl rounded w-full text-left"
+          >
+            <span>{email}</span>
+          </button>
+          {showLogout && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center space-x-2 p-3 text-black bg-white hover:bg-slate-200 text-xl rounded w-full text-left mt-2"
+            >
+              <FaSignOutAlt />
+              <span>Logout</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Toggle Button */}
