@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { FcGoogle } from "react-icons/fc";
@@ -8,9 +8,19 @@ const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
 const Login = () => {
   const navigate = useNavigate();
+const location = useLocation();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [errorMessage, setErrorMessage] = useState("");
+  
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const token = query.get("token");
+    if (token) {
+      Cookies.set("token", token, { expires: 7 });
+      navigate("/home"); 
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,13 +70,90 @@ const Login = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
+// const handleGoogleLogin = async () => {
+  //   try {
+  //     const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+  //       params: {
+  //         redirect_uri: "http://localhost:3000/auth-callback",
+  //       },
+  //     });
+  //     if (res.status === 200 && res.data.auth_url) {
+  //       window.location.href = res.data.auth_url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Google Login Error:", error);
+  //     setErrorMessage("Failed to authenticate with Google.");
+  //   }
+  // };
+ 
+// const handleGoogleLogin = async () => {
+  //   try {
+  //     const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+  //       params: {
+  //         redirect_uri: "http://localhost:3000/auth-callback",
+  //       },
+  //     });
+  //     if (res.status === 200 && res.data.auth_url) {
+  //       window.location.href = res.data.auth_url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Google Login Error:", error);
+  //     setErrorMessage("Failed to authenticate with Google.");
+  //   }
+  // };
+ 
+// const handleGoogleLogin = async () => {
+  //   try {
+  //     const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+  //       params: {
+  //         redirect_uri: "http://localhost:3000/auth-callback",
+  //       },
+  //     });
+  //     if (res.status === 200 && res.data.auth_url) {
+  //       window.location.href = res.data.auth_url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Google Login Error:", error);
+  //     setErrorMessage("Failed to authenticate with Google.");
+  //   }
+  // };
+ 
+// const handleGoogleLogin = async () => {
+  //   try {
+  //     const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+  //       params: {
+  //         redirect_uri: "http://localhost:3000/auth-callback",
+  //       },
+  //     });
+  //     if (res.status === 200 && res.data.auth_url) {
+  //       window.location.href = res.data.auth_url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Google Login Error:", error);
+  //     setErrorMessage("Failed to authenticate with Google.");
+  //   }
+  // };
+ 
+  // const handleGoogleLogin = async () => {
+  //   try {
+  //     const res = await axios.get(`${API_BASE_URL}/auth/google`, {
+  //       params: {
+  //         redirect_uri: "http://localhost:3000/auth-callback",
+  //       },
+  //     });
+  //     if (res.status === 200 && res.data.auth_url) {
+  //       window.location.href = res.data.auth_url;
+  //     }
+  //   } catch (error) {
+  //     console.error("Google Login Error:", error);
+  //     setErrorMessage("Failed to authenticate with Google.");
+  //   }
+  // };
+ 
+const handleGoogleLogin = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/auth/google`, {
-        params: {
-          redirect_uri: "http://localhost:3000/auth-callback",
-        },
-      });
+      const redirectUrl = `${window.location.origin}/auth/callback`;
+      const res = await axios.get(`${API_BASE_URL}/auth/google?redirect_url=${encodeURIComponent(redirectUrl)}`);
       if (res.status === 200 && res.data.auth_url) {
         window.location.href = res.data.auth_url;
       }
@@ -76,13 +163,13 @@ const Login = () => {
     }
   };
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const error = urlParams.get("error");
-    if (error === "auth_failed") {
-      setErrorMessage("Authentication failed. Please try again.");
-    }
-  }, []);
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const error = urlParams.get("error");
+  //   if (error === "auth_failed") {
+  //     setErrorMessage("Authentication failed. Please try again.");
+  //   }
+  // }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">

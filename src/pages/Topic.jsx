@@ -134,8 +134,8 @@ const Topics = () => {
                   >
                     <td className="p-3">{topic.name}</td>
                     <td className="p-3">{topic.description}</td>
-                    <td className="p-3">{topic.yourScore}</td>
-                    <td className="p-3">{topic.highScore}</td>
+                    <td className="p-3">{topic.your_score}</td>
+                    <td className="p-3">{topic.high_score}</td>
                   </tr>
                 ))
               ) : (

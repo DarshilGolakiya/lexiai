@@ -10,7 +10,7 @@ import Forgate from "./password/Forgate";
 import Cookies from "js-cookie";
 import Billing from "./pages/Billing";
 import History from "./pages/History";
-import AuthCallback from "./components/AuthCallback";
+import GoogleAuthCallback from "./pages/GoogleAuthCallback";
 
 const PrivateRoute = ({ element: Component, ...rest }) => {
   const token = Cookies.get("token");
@@ -33,7 +33,7 @@ const AppContent = () => {
           <Route path="/forgate-password" element={<Forgate />} />
           <Route path="/billing" element={<PrivateRoute element={Billing} />} />
           <Route path="/history" element={<PrivateRoute element={History} />} />
-          <Route path="/auth-callback" element={<AuthCallback />} />
+          <Route path="/auth/callback" element={<GoogleAuthCallback />} />
         </Routes>
       </div>
     </>

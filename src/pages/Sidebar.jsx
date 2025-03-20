@@ -8,13 +8,15 @@ import {
   FaHistory,
   FaMoneyBill,
   FaSignOutAlt,
+  FaUser,
 } from "react-icons/fa";
+import { SlArrowDown } from "react-icons/sl";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showLogout, setShowLogout] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
   const [email, setEmail] = useState("");
   const navigate = useNavigate();
 
@@ -30,6 +32,8 @@ const Sidebar = () => {
     Cookies.remove("token");
     navigate("/");
   };
+
+  const truncatedEmail = email.length > 6 ? `${email.slice(0, 6)}...` : email;
 
   return (
     <div className="flex">
@@ -47,7 +51,8 @@ const Sidebar = () => {
           >
             <h1>LexiAI</h1>
           </Link>
-          <div><hr className="w-full border-gray-300" /></div>
+          <hr className="w-full border-gray-300 mt-4" />
+
           <nav className="flex flex-col space-y-4 mt-6">
             <Link
               to="/home"
@@ -80,22 +85,44 @@ const Sidebar = () => {
           </nav>
         </div>
 
-        {/* User Email and Logout Button */}
-        <div className="flex flex-col items-start">
+        {/* User Icon & Dropdown */}
+        <div className="relative flex flex-col items-center">
           <button
-            onClick={() => setShowLogout(!showLogout)}
-            className="flex items-center space-x-2 p-3 hover:bg-gray-700 text-xl rounded w-full text-left"
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="flex items-center space-x-3 w-full p-3 rounded-lg hover:bg-gray-800"
           >
-            <span>{email}</span>
+            <FaUser
+              size={20}
+              className="w-12 h-12 rounded-full border border-gray-400"
+            />
+            <div className="flex flex-col">
+              <span className="text-white mt-2">{truncatedEmail}</span>
+            </div>
+            <SlArrowDown
+              className={`transform transition-transform ${
+                showDropdown ? "rotate-180" : ""
+              }`}
+            />
           </button>
-          {showLogout && (
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 p-3 text-black bg-white hover:bg-slate-200 text-xl rounded w-full text-left mt-2"
-            >
-              <FaSignOutAlt />
-              <span>Logout</span>
-            </button>
+
+          {showDropdown && (
+            <div className="absolute bottom-16 right-0 w-56 bg-white text-black shadow-lg rounded-md p-3">
+              <p className="text-gray-700 font-semibold px-3">Hi, {email}!</p>
+              <hr className="my-2 border-gray-300" />
+              <Link
+                to="/billing"
+                className="flex items-center space-x-2 px-3 py-2 hover:bg-gray-100 rounded-md"
+              >
+                📜 <span>Manage subscription</span>
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="flex items-center space-x-2 px-3 py-2 text-red-600 hover:bg-gray-100 rounded-md w-full"
+              >
+                <FaSignOutAlt />
+                <span>Logout</span>
+              </button>
+            </div>
           )}
         </div>
       </div>

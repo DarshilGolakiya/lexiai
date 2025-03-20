@@ -1,23 +1,23 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
+// import React, { useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import Cookies from "js-cookie";
 
-const AuthCallback = () => {
-  const navigate = useNavigate();
+// const AuthCallback = () => {
+//   const navigate = useNavigate();
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
+//   useEffect(() => {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const token = urlParams.get("token");
 
-    if (token) {
-      Cookies.set("token", token);
-      navigate("/home");
-    } else {
-      navigate("/");
-    }
-  }, [navigate]);
+//     if (token) {
+//       Cookies.set("token", token, { expires: 7 }); // Store token for 7 days
+//       navigate("/home"); // Redirect to home
+//     } else {
+//       navigate("/login");
+//     }
+//   }, [navigate]);
 
-  return <div>Loading...</div>;
-};
+//   return <p>Authenticating...</p>;
+// };
 
-export default AuthCallback;
+// export default AuthCallback;
